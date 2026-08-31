@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>Desafío Isuzu</title>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+
+    /* Fondo exterior cuando se prueba en una PC */
+    background: #151515;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    touch-action: manipulation;
+    user-select: none;
+}
+
+
+/* =========================================================
+   TÓTEM 9:16
+   SI SE ABRE EN PC, MANTIENE ESTA PROPORCIÓN
+========================================================= */
+
+.totem {
+    position: relative;
+
+    width: min(
+        100vw,
+        calc(100dvh * 9 / 16)
+    );
+
+    height: min(
+        100dvh,
+        calc(100vw * 16 / 9)
+    );
+
+    aspect-ratio: 9 / 16;
+
+    overflow: hidden;
+
+    background:
+        url('fondo.png')
+        center center / cover
+        no-repeat;
+}
+
+
+/* =========================================================
+   ESTRUCTURA
+========================================================= */
+
+.container {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    grid-template-rows:
+        20%
+        1fr
+        14%;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 2.5%;
+
+    position: relative;
+    z-index: 5;
+}
+
+
+/* =========================================================
+   TÍTULO COMO IMAGEN
+========================================================= */
+
+.title-frame {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/*
+    Este es el tamaño principal del título.
+
+    Como depende del ancho DEL TÓTEM,
+    no cambia de forma absurda al abrirse
+    en un monitor horizontal.
+*/
+
+.titulo-img {
+    display: block;
+
+    width: 70%;
+
+    height: auto;
+
+    max-height: 88%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    filter:
+        drop-shadow(
+            0 5px 4px
+            rgba(0,0,0,.48)
+        );
+}
+
+
+/* =========================================================
+   ZONA CENTRAL
+========================================================= */
+
+.center-area {
+    width: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SUBTÍTULO + CONTADOR
+========================================================= */
+
+.prompt-area {
+    width: 100%;
+
+    height: 14%;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    padding-top: 1%;
+}
+
+
+/* =========================================================
+   SUBTÍTULO
+========================================================= */
+
+.subtitle {
+    font-size: clamp(
+        13px,
+        3.6vw,
+        25px
+    );
+
+    font-weight: 900;
+    font-style: italic;
+
+    line-height: 1.1;
+
+    text-align: center;
+    text-transform: uppercase;
+
+    white-space: nowrap;
+
+    text-shadow:
+        0 3px 5px
+        rgba(0,0,0,.45);
+}
+
+
+/* =========================================================
+   CONTADOR
+   SIEMPRE RESERVA ESPACIO
+========================================================= */
+
+#contador {
+    width: 100%;
+    height: 52%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: clamp(
+        22px,
+        7vw,
+        42px
+    );
+
+    font-weight: 900;
+
+    line-height: 1;
+
+    text-shadow:
+        0 0 7px #fff,
+        0 0 15px #ff0011;
+}
+
+
+/* =========================================================
+   CARTAS
+========================================================= */
+
+.game-section {
+    width: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.game {
+    width: 88%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: clamp(
+        6px,
+        1.6vw,
+        12px
+    );
+
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CARTA
+========================================================= */
+
+.card {
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    border-radius: clamp(
+        12px,
+        3vw,
+        23px
+    );
+
+    perspective: 1200px;
+
+    cursor: pointer;
+
+    transition:
+        transform .18s ease;
+}
+
+
+.card:active {
+    transform: scale(.97);
+}
+
+
+/* =========================================================
+   INTERIOR
+========================================================= */
+
+.inner {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+
+    border-radius: inherit;
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform .55s
+        cubic-bezier(.4,.2,.2,1);
+}
+
+
+.card.flip .inner {
+    transform: rotateY(180deg);
+}
+
+
+/* =========================================================
+   CARAS
+========================================================= */
+
+.front,
+.back {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    overflow: hidden;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    box-shadow:
+        0 5px 9px
+        rgba(0,0,0,.4),
+
+        0 0 0 2px
+        rgba(110,0,0,.65);
+}
+
+
+/* =========================================================
+   REVERSO
+========================================================= */
+
+.back {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff 0%,
+            #f7f7f7 52%,
+            #e7e7e7 100%
+        );
+}
+
+
+.back::after {
+    content: '';
+
+    width: 57%;
+    height: 27%;
+
+    background:
+        url('logo-isuzu.png')
+        center / contain
+        no-repeat;
+}
+
+
+/* =========================================================
+   PREMIO
+========================================================= */
+
+.front {
+    transform: rotateY(180deg);
+
+    background-color: #fff;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* =========================================================
+   GANADOR
+========================================================= */
+
+.card.ganadora {
+    animation:
+        glowGanador
+        .6s ease
+        infinite alternate;
+}
+
+
+@keyframes glowGanador {
+
+    from {
+        transform: scale(1);
+
+        filter:
+            drop-shadow(
+                0 0 4px
+                #ffd000
+            );
+    }
+
+    to {
+        transform: scale(1.04);
+
+        filter:
+            drop-shadow(
+                0 0 12px
+                #ffd000
+            )
+            drop-shadow(
+                0 0 18px
+                #ff7800
+            );
+    }
+
+}
+
+
+/* =========================================================
+   ÁREA DEL BOTÓN
+========================================================= */
+
+.controls {
+    width: 100%;
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /*
+       Así el botón queda aproximadamente
+       en el centro entre cartas y footer.
+    */
+
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+
+/* =========================================================
+   BOTÓN INICIAR
+========================================================= */
+
+.controls button {
+    position: relative;
+
+    width: 52%;
+
+    height: clamp(
+        42px,
+        6.2vh,
+        66px
+    );
+
+    border: 2px solid #fff;
+
+    border-radius:
+        clamp(
+            9px,
+            2.2vw,
+            14px
+        );
+
+    outline: none;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f00c18 0%,
+            #d2000d 53%,
+            #a40008 100%
+        );
+
+    color: #fff;
+
+    font-family:
+        'Montserrat',
+        sans-serif;
+
+    font-size: clamp(
+        16px,
+        4.3vw,
+        27px
+    );
+
+    font-weight: 900;
+    font-style: italic;
+
+    cursor: pointer;
+
+    box-shadow:
+        inset 0 2px 3px
+        rgba(255,255,255,.28),
+
+        0 4px 0 #680006,
+
+        0 6px 10px
+        rgba(0,0,0,.35),
+
+        0 0 7px
+        rgba(255,0,0,.45);
+
+    transition:
+        transform .15s ease;
+}
+
+
+/* « */
+
+.controls button::before {
+    content: '«';
+
+    position: absolute;
+
+    left: 7%;
+
+    top: 50%;
+
+    transform:
+        translateY(-52%);
+
+    font-size: .8em;
+    font-weight: 900;
+}
+
+
+/* » */
+
+.controls button::after {
+    content: '»';
+
+    position: absolute;
+
+    right: 7%;
+
+    top: 50%;
+
+    transform:
+        translateY(-52%);
+
+    font-size: .8em;
+    font-weight: 900;
+}
+
+
+.controls button:active {
+    transform:
+        translateY(3px)
+        scale(.98);
+}
+
+
+.controls button:disabled {
+    opacity: .5;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding-top: 5%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(118,0,5,.55) 0%,
+            rgba(70,0,4,.82) 30%,
+            rgba(35,0,2,.95) 65%,
+            #050000 100%
+        );
+
+    border-top:
+        2px solid
+        rgba(255,45,45,.43);
+}
+
+
+/* LÍNEA SUPERIOR */
+
+.footer::before {
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ff1824 18%,
+            #ff3e47 50%,
+            #ff1824 82%,
+            transparent
+        );
+
+    box-shadow:
+        0 0 8px
+        rgba(255,0,0,.8);
+}
+
+
+/* BRILLO */
+
+.footer::after {
+    content: '';
+
+    position: absolute;
+
+    top: -25%;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    width: 80%;
+    height: 90%;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(180,0,8,.22),
+            transparent 70%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   LOGO AUTONIZA
+========================================================= */
+
+.footer img {
+    width: 60%;
+
+    max-height: 70%;
+
+    object-fit: contain;
+
+    position: relative;
+
+    z-index: 2;
+
+    filter:
+        drop-shadow(
+            0 4px 5px
+            rgba(0,0,0,.55)
+        );
+}
+
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+.overlay {
+    position: absolute;
+
+    inset: 0;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 7%;
+
+    background:
+        rgba(0,0,0,.84);
+
+    backdrop-filter: blur(5px);
+
+    z-index: 999;
+}
+
+
+.popup {
+    width: 82%;
+
+    max-width: 440px;
+
+    padding:
+        clamp(
+            22px,
+            6vw,
+            35px
+        );
+
+    border-radius: 20px;
+
+    border:
+        3px solid
+        #e30613;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #ededed
+        );
+
+    color: #222;
+
+    text-align: center;
+
+    box-shadow:
+        0 0 35px
+        rgba(227,6,19,.75),
+
+        0 18px 30px
+        rgba(0,0,0,.55);
+
+    animation:
+        popIn .35s ease;
+}
+
+
+@keyframes popIn {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(.55);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   IMAGEN PREMIO
+========================================================= */
+
+.popup-premio {
+    display: none;
+
+    width: 65%;
+
+    aspect-ratio: 1 / 1;
+
+    object-fit: contain;
+
+    margin:
+        0 auto 18px;
+
+    border-radius: 14px;
+}
+
+
+/* =========================================================
+   TEXTO RESULTADO
+========================================================= */
+
+.popup h2 {
+    font-size: clamp(
+        22px,
+        5vw,
+        34px
+    );
+
+    font-weight: 900;
+
+    margin-bottom: 20px;
+}
+
+
+.popup h2 strong {
+    display: inline-block;
+
+    margin-top: 8px;
+
+    color: #e30613;
+}
+
+
+/* =========================================================
+   BOTÓN POPUP
+========================================================= */
+
+.popup button {
+    width: 100%;
+
+    padding:
+        14px 15px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            #ee1721,
+            #b9000b
+        );
+
+    color: #fff;
+
+    font-family:
+        'Montserrat',
+        sans-serif;
+
+    font-size: clamp(
+        15px,
+        4vw,
+        20px
+    );
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   AJUSTE PARA TÓTEMS MUY ANGOSTOS
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .titulo-img {
+        width: 74%;
+    }
+
+    .subtitle {
+        font-size: clamp(
+            13px,
+            3.8vw,
+            17px
+        );
+    }
+
+    .game {
+        width: 90%;
+
+        gap: 6px;
+    }
+
+    .controls button {
+        width: 55%;
+    }
+
+}
+
+
+/* =========================================================
+   IMPORTANTE:
+   NO HAY ADAPTACIÓN HORIZONTAL.
+   EL DISEÑO SIEMPRE ES 9:16.
+========================================================= */
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     TÓTEM
+========================================================= -->
+
+<div class="totem">
+
+
+    <div class="container">
+
+
+        <!-- =================================================
+             TÍTULO
+        ================================================== -->
+
+        <header class="header">
+
+            <div class="title-frame">
+
+                <img
+                    src="titulo-isuzu.png"
+                    class="titulo-img"
+                    alt="Desafío Isuzu"
+                    draggable="false"
+                >
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             JUEGO
+        ================================================== -->
+
+        <main class="center-area">
+
+
+            <!-- SUBTÍTULO Y CONTADOR -->
+
+            <div class="prompt-area">
+
+                <div class="subtitle">
+                    PON A PRUEBA TU MEMORIA
+                </div>
+
+                <div id="contador"></div>
+
+            </div>
+
+
+
+            <!-- CARTAS -->
+
+            <div class="game-section">
+
+                <div
+                    class="game"
+                    id="game"
+                ></div>
+
+            </div>
+
+
+
+            <!-- INICIAR -->
+
+            <div class="controls">
+
+                <button
+                    id="btnIniciar"
+                    onclick="iniciarJuego()"
+                >
+                    INICIAR
+                </button>
+
+            </div>
+
+
+        </main>
+
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer class="footer">
+
+            <img
+                src="logo-autoniza.png"
+                alt="Autoniza"
+                draggable="false"
+            >
+
+        </footer>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         RESULTADO
+    ====================================================== -->
+
+    <div
+        class="overlay"
+        id="overlay"
+    >
+
+        <div class="popup">
+
+            <img
+                id="popupPremio"
+                class="popup-premio"
+                src=""
+                alt="Premio"
+            >
+
+            <h2 id="mensaje"></h2>
+
+            <button onclick="reiniciarJuego()">
+                JUGAR DE NUEVO
+            </button>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     AUDIOS
+========================================================= -->
+
+<audio
+    id="flipSound"
+    src="flip.mp3"
+    preload="auto"
+></audio>
+
+<audio
+    id="winSound"
+    src="win.mp3"
+    preload="auto"
+></audio>
+
+<audio
+    id="loseSound"
+    src="lose.mp3"
+    preload="auto"
+></audio>
+
+<audio
+    id="bgMusic"
+    src="musica.mp3"
+    preload="auto"
+    loop
+></audio>
+
+
+
+<script>
+
+/* =========================================================
+   PREMIOS
+========================================================= */
+
+const premios = [
+
+    {
+        img: 'premio1.png',
+        nombre: 'TERMÓMETRO DIGITAL'
+    },
+
+    {
+        img: 'premio2.png',
+        nombre: 'LANYARD'
+    },
+
+    {
+        img: 'premio3.png',
+        nombre: 'POLO ISUZU'
+    },
+
+    {
+        img: 'premio4.png',
+        nombre: 'GORRA ISUZU'
+    }
+
+];
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let cartas = [];
+
+let primera = null;
+
+let segunda = null;
+
+let bloqueo = true;
+
+let puedeJugar = false;
+
+let resultadoMostrado = false;
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const game =
+    document.getElementById('game');
+
+const contador =
+    document.getElementById('contador');
+
+const overlay =
+    document.getElementById('overlay');
+
+const mensaje =
+    document.getElementById('mensaje');
+
+const popupPremio =
+    document.getElementById('popupPremio');
+
+const btnIniciar =
+    document.getElementById('btnIniciar');
+
+const flipSound =
+    document.getElementById('flipSound');
+
+const winSound =
+    document.getElementById('winSound');
+
+const loseSound =
+    document.getElementById('loseSound');
+
+const bgMusic =
+    document.getElementById('bgMusic');
+
+
+/* =========================================================
+   MEZCLAR
+========================================================= */
+
+function mezclar(array) {
+
+    for (
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            array[i],
+            array[j]
+        ] =
+        [
+            array[j],
+            array[i]
+        ];
+
+    }
+
+
+    return array;
+
+}
+
+
+/* =========================================================
+   SONIDO
+========================================================= */
+
+function reproducirSonido(audio) {
+
+    try {
+
+        audio.pause();
+
+        audio.currentTime = 0;
+
+
+        audio
+            .play()
+            .catch(() => {});
+
+    }
+
+    catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+/* =========================================================
+   CREAR TABLERO
+========================================================= */
+
+function crearTablero() {
+
+    game.innerHTML = '';
+
+
+    cartas = [
+
+        ...premios,
+
+        ...premios
+
+    ];
+
+
+    mezclar(cartas);
+
+
+    cartas.forEach(premio => {
+
+
+        const card =
+            document.createElement('div');
+
+
+        card.classList.add('card');
+
+
+        card.innerHTML = `
+
+            <div class="inner">
+
+                <div
+                    class="front"
+                    style="
+                        background-image:
+                        url('${premio.img}');
+                    "
+                ></div>
+
+                <div class="back"></div>
+
+            </div>
+
+        `;
+
+
+        card.addEventListener(
+
+            'click',
+
+            () =>
+                clickCard(
+                    card,
+                    premio
+                )
+
+        );
+
+
+        game.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   INICIAR JUEGO
+========================================================= */
+
+async function iniciarJuego() {
+
+
+    if (
+        puedeJugar ||
+        !bloqueo
+    ) {
+
+        return;
+
+    }
+
+
+    primera = null;
+
+    segunda = null;
+
+    bloqueo = true;
+
+    puedeJugar = false;
+
+    resultadoMostrado = false;
+
+
+    btnIniciar.disabled = true;
+
+
+    /* =====================================================
+       MÚSICA
+
+       Empieza al primer toque en INICIAR
+       y continúa durante todo el juego.
+    ====================================================== */
+
+    bgMusic.volume = .18;
+
+
+    if (bgMusic.paused) {
+
+        try {
+
+            await bgMusic.play();
+
+        }
+
+        catch (error) {}
+
+    }
+
+
+    const cards =
+        document.querySelectorAll('.card');
+
+
+    /* =====================================================
+       MOSTRAR PREMIOS
+    ====================================================== */
+
+    reproducirSonido(
+        flipSound
+    );
+
+
+    cards.forEach(
+
+        card =>
+            card.classList.add(
+                'flip'
+            )
+
+    );
+
+
+    /* =====================================================
+       CUENTA REGRESIVA RÁPIDA
+    ====================================================== */
+
+    contador.innerText = '3';
+
+    await esperar(200);
+
+
+    contador.innerText = '2';
+
+    await esperar(200);
+
+
+    contador.innerText = '1';
+
+    await esperar(200);
+
+
+    contador.innerText = '';
+
+
+    /* =====================================================
+       OCULTAR CARTAS
+    ====================================================== */
+
+    reproducirSonido(
+        flipSound
+    );
+
+
+    cards.forEach(
+
+        card =>
+            card.classList.remove(
+                'flip'
+            )
+
+    );
+
+
+    await esperar(550);
+
+
+    bloqueo = false;
+
+    puedeJugar = true;
+
+}
+
+
+/* =========================================================
+   CLICK CARTA
+========================================================= */
+
+function clickCard(
+    card,
+    premio
+) {
+
+
+    if (
+        bloqueo ||
+        !puedeJugar ||
+        card.classList.contains(
+            'flip'
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    reproducirSonido(
+        flipSound
+    );
+
+
+    card.classList.add(
+        'flip'
+    );
+
+
+    if (!primera) {
+
+
+        primera = {
+
+            card,
+
+            premio
+
+        };
+
+
+        return;
+
+    }
+
+
+    segunda = {
+
+        card,
+
+        premio
+
+    };
+
+
+    bloqueo = true;
+
+    puedeJugar = false;
+
+
+    comprobarResultado();
+
+}
+
+
+/* =========================================================
+   COMPROBAR
+========================================================= */
+
+async function comprobarResultado() {
+
+
+    await esperar(1000);
+
+
+    const coincide =
+
+        primera.premio.nombre ===
+        segunda.premio.nombre;
+
+
+    if (coincide) {
+
+
+        primera
+            .card
+            .classList
+            .add(
+                'ganadora'
+            );
+
+
+        segunda
+            .card
+            .classList
+            .add(
+                'ganadora'
+            );
+
+
+        await esperar(450);
+
+
+        mostrarResultado(
+
+            true,
+
+            primera.premio
+
+        );
+
+    }
+
+
+    else {
+
+
+        reproducirSonido(
+            flipSound
+        );
+
+
+        primera
+            .card
+            .classList
+            .remove(
+                'flip'
+            );
+
+
+        segunda
+            .card
+            .classList
+            .remove(
+                'flip'
+            );
+
+
+        await esperar(400);
+
+
+        mostrarResultado(false);
+
+    }
+
+}
+
+
+/* =========================================================
+   RESULTADO
+========================================================= */
+
+function mostrarResultado(
+    gano,
+    premio = null
+) {
+
+
+    if (resultadoMostrado) {
+
+        return;
+
+    }
+
+
+    resultadoMostrado = true;
+
+
+    /*
+       NO SE PAUSA LA MÚSICA
+    */
+
+
+    if (gano) {
+
+
+        reproducirSonido(
+            winSound
+        );
+
+
+        mensaje.innerHTML = `
+
+            🎉 ¡GANASTE!
+
+            <br>
+
+            <strong>
+                ${premio.nombre}
+            </strong>
+
+        `;
+
+
+        popupPremio.src =
+            premio.img;
+
+
+        popupPremio.style.display =
+            'block';
+
+    }
+
+
+    else {
+
+
+        reproducirSonido(
+            loseSound
+        );
+
+
+        mensaje.innerHTML = `
+
+            INTÉNTALO
+
+            <br>
+
+            DE NUEVO
+
+        `;
+
+
+        popupPremio.src = '';
+
+
+        popupPremio.style.display =
+            'none';
+
+    }
+
+
+    overlay.style.display =
+        'flex';
+
+}
+
+
+/* =========================================================
+   REINICIAR
+========================================================= */
+
+function reiniciarJuego() {
+
+
+    overlay.style.display =
+        'none';
+
+
+    primera = null;
+
+    segunda = null;
+
+    bloqueo = true;
+
+    puedeJugar = false;
+
+    resultadoMostrado = false;
+
+
+    contador.innerText = '';
+
+
+    btnIniciar.disabled =
+        false;
+
+
+    popupPremio.src = '';
+
+
+    popupPremio.style.display =
+        'none';
+
+
+    /*
+       NO SE PAUSA NI REINICIA musica.mp3
+    */
+
+
+    crearTablero();
+
+}
+
+
+/* =========================================================
+   ESPERAR
+========================================================= */
+
+function esperar(ms) {
+
+    return new Promise(
+
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+
+    );
+
+}
+
+
+/* =========================================================
+   EVITAR DOBLE TAP
+========================================================= */
+
+let ultimoTouch = 0;
+
+
+document.addEventListener(
+
+    'touchend',
+
+    function(event) {
+
+
+        const ahora =
+            Date.now();
+
+
+        if (
+            ahora -
+            ultimoTouch <=
+            300
+        ) {
+
+            event.preventDefault();
+
+        }
+
+
+        ultimoTouch = ahora;
+
+    },
+
+    {
+        passive: false
+    }
+
+);
+
+
+/* =========================================================
+   INICIALIZAR
+========================================================= */
+
+crearTablero();
+
+</script>
+
+
+</body>
+</html>
